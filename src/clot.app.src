@@ -1,0 +1,14 @@
+{application, clot,
+   [
+      {description, "aws cloud toolkit"},
+      {vsn,         "0.2.0"},
+      {modules,     []},
+      {registered,  []},
+      {applications,[
+         kernel
+        ,stdlib
+      ]},
+      {mod, {clot_app, []}},
+      {env, []}
+   ]
+}.  
