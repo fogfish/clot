@@ -42,8 +42,7 @@ seed() ->
 -spec(attach/0 :: () -> any()).
 
 attach() ->
-   Lb  = application:get_env(clot, lb, ""),
-   esh:run([bash, clot:which(elb), Lb, "2> /dev/null"]).
+   esh:run([bash, clot:which(elb), "2> /dev/null"]).
    
 
 

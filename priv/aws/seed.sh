@@ -19,11 +19,16 @@
 set -u
 set -e
 
-SG=$(curl -s --connect-timeout 1 http://169.254.169.254/latest/meta-data/security-groups || echo $1)
+API=http://169.254.169.254/latest/meta-data
+SG=$(curl -s --connect-timeout 1 ${API}/security-groups || echo "none")
+AZ=$(curl -s --connect-timeout 1 ${API}/placement/availability-zone || echo "none")
 
-aws ec2 \
-   describe-instances \
-   --region eu-west-1 \
-   --filters "Name=instance.group-name,Values=${SG}" \
-   --query 'Reservations[*].Instances[*].PrivateIpAddress' \
-   --output text
+if [[ "${SG}" != "none" ]] ;
+then
+   aws ec2 \
+      describe-instances \
+      --region ${AZ:0:${#AZ}-1} \
+      --filters "Name=instance.group-name,Values=${SG}" \
+      --query 'Reservations[*].Instances[*].PrivateIpAddress' \
+      --output text
+fi

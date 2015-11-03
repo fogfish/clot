@@ -19,14 +19,17 @@
 set -u
 set -e
 
-ID=$(curl -s --connect-timeout 1 http://169.254.169.254/latest/meta-data/instance-id || echo "none")
+API=http://169.254.169.254/latest/meta-data
+ID=$(curl -s --connect-timeout 1 ${API}/instance-id || echo "none")
+AZ=$(curl -s --connect-timeout 1 ${API}/placement/availability-zone || echo "none")
 
-if [[ "$ID" != "none" ]] ;
+if [[ "${ID}" != "none" ]] ;
 then
-   LB=$(cat /etc/aws/elb | echo $1)
+   LB=$(cat /etc/aws/elb)
 
    aws elb \
       register-instances-with-load-balancer \
+      --region ${AZ:0:${#AZ}-1} \
       --load-balancer-name ${LB} \
       --instances ${ID}
 fi
