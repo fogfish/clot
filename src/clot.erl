@@ -16,7 +16,8 @@
 -module(clot).
 
 -export([
-   seed/0
+   seed/0,
+   attach/0
 ]).
 -export([
    which/1
@@ -34,6 +35,16 @@
 
 seed() ->
    clot_sup:start_child(worker, erlang:make_ref(), clot_seed, []).
+
+%%
+%% attach instance to elb
+
+-spec(attach/0 :: () -> any()).
+
+attach() ->
+   Lb  = application:get_env(clot, lb, ""),
+   esh:run([bash, clot:which(elb), Lb, "2> /dev/null"]).
+   
 
 
 %%%----------------------------------------------------------------------------   

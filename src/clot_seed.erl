@@ -35,7 +35,7 @@ start_link() ->
 init(_) ->
    Tts = application:get_env(clot, tts, 30000),
    Sg  = application:get_env(clot, sg, ""),
-   {ok, Pid} = esh:spawn_link([sh, clot:which(seed), Sg, "2> /dev/null"], [norun]),
+   {ok, Pid} = esh:spawn_link([bash, clot:which(seed), Sg, "2> /dev/null"], [norun]),
    erlang:send_after(Tts, self(), seed),
    {ok, handle, #{pid => Pid, tts => Tts}}.
 
