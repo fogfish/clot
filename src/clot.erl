@@ -31,7 +31,7 @@
 
 %%
 %% seed cluster
--spec(seed/0 :: () -> {ok, pid()} | {error, any()}).
+-spec seed() -> {ok, pid()} | {error, any()}.
 
 seed() ->
    clot_sup:start_child(worker, erlang:make_ref(), clot_seed, []).
@@ -39,7 +39,7 @@ seed() ->
 %%
 %% attach instance to elb
 
--spec(attach/0 :: () -> any()).
+-spec attach() -> any().
 
 attach() ->
    esh:run([bash, clot:which(elb), "2> /dev/null"]).
@@ -61,3 +61,4 @@ which(Name) ->
       "aws",
       erlang:atom_to_list(Name) ++ ".sh"
    ]).
+
